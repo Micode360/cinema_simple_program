@@ -76,8 +76,13 @@ def main():
     
         if options == "1":
             book_a_movie()
-    
+        if options == "2":
+            print("Option 2")
         if options == "3":
+            print("Option 3")
+        if options == "4":
+            print("Option 4")
+        if options == "5":
             break
 
 
