@@ -40,6 +40,8 @@ def book_a_movie():
         print(f"{"--" * 24}\nWrong choice of movie. Try again\n{"--" * 24}")
         return True
 
+    print("testing")
+
     # Purchase movie
     print(f"{"--" * 24}\nThe movie {searched_movie["title"]} cost {searched_movie["price"]} at {searched_movie["time"]}.\n{"--" * 24}")
     choice = input("Do you want to purchase this movie? (Yes | No): ")
