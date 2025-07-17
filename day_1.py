@@ -27,6 +27,8 @@ booked_movies = []
 
 drinks = []
 
+# reusable function 
+
 def list_movies(movies, movie_name="None", type="all"):
     if type == "all":
         for movie in movies:
@@ -58,6 +60,7 @@ def book_a_movie():
 
     # Purchase movie
     print(f"{"--" * 24}\nThe movie {searched_movie["title"]} cost {searched_movie["price"]} at {searched_movie["time"]}.\n{"--" * 24}")
+
     choice = input("Do you want to purchase this movie? (Yes | No): ")
     
     if choice.lower() == "Yes".lower():
