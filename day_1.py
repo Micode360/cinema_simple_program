@@ -52,6 +52,8 @@ def book_a_movie():
     return True
 
 
+
+
 def main():
     print(f"{"--" * 24}\nWelcome to Genesis Cinema.\n{"--" * 24}")
 
