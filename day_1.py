@@ -12,7 +12,7 @@ movies = [
     {"title": "Super Mario Bros", "price": 2100, "genre": "Animation/Adventure", "time": "5:45 PM"},
     {"title": "Guardians of the Galaxy Vol. 3", "price": 3100, "genre": "Superhero/Comedy", "time": "8:00 PM"}
 ]
-drink = [
+refreshments = [
     {"Name": "Coke", "Price": 2900, "Recommendation": 4.6, "Category": "Drinks"},
     {"Name": "Fanta", "Price": 3000, "Recommendation": 4.5, "Category": "Drinks"},
     {"Name": "Schweppes", "Price": 4000, "Recommendation": 4.6, "Category": "Drinks"},
@@ -37,6 +37,7 @@ def list_movies(movies, movie_name="None", type="all"):
                return movie
         else:
             return False
+
 
 
 def book_a_movie():
