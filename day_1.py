@@ -12,8 +12,20 @@ movies = [
     {"title": "Super Mario Bros", "price": 2100, "genre": "Animation/Adventure", "time": "5:45 PM"},
     {"title": "Guardians of the Galaxy Vol. 3", "price": 3100, "genre": "Superhero/Comedy", "time": "8:00 PM"}
 ]
+drink = [
+    {"Name": "Coke", "Price": 2900, "Recommendation": 4.6, "Category": "Drinks"},
+    {"Name": "Fanta", "Price": 3000, "Recommendation": 4.5, "Category": "Drinks"},
+    {"Name": "Schweppes", "Price": 4000, "Recommendation": 4.6, "Category": "Drinks"},
+    {"Name": "Action Bitters", "Price": 4700, "Recommendation": 4.6, "Category": "Drinks"},
+    {"Name": "Smirnoff", "Price": 2900, "Recommendation": 4.6, "Category": "Drinks"},
+    {"Name": "Popcorn", "Price": 2900, "Recommendation": 4.6, "Category": "Snacks"},
+    {"Name": "Doughnut", "Price": 2900, "Recommendation": 4.6, "Category": "Snacks"},
+    {"Name": "Fried Buns", "Price": 2900, "Recommendation": 4.6, "Category": "Snacks"},
+]
 
 booked_movies = []
+
+drinks = []
 
 def list_movies(movies, movie_name="None", type="all"):
     if type == "all":
@@ -28,6 +40,7 @@ def list_movies(movies, movie_name="None", type="all"):
 
 
 def book_a_movie():
+    name = input("What is your name?: ")
     # Listing of movies
     print(f"{"--" * 24}\nWhat movie do you want to see?\n{"--" * 24}")
     list_movies(movies)
@@ -40,19 +53,18 @@ def book_a_movie():
         print(f"{"--" * 24}\nWrong choice of movie. Try again\n{"--" * 24}")
         return True
 
-    print("testing")
+
 
     # Purchase movie
     print(f"{"--" * 24}\nThe movie {searched_movie["title"]} cost {searched_movie["price"]} at {searched_movie["time"]}.\n{"--" * 24}")
     choice = input("Do you want to purchase this movie? (Yes | No): ")
     
     if choice.lower() == "Yes".lower():
-        booked_movies.append(searched_movie)
+        booked_movies.append({"name": name,"extra": [],"movie": searched_movie})
         print(f"{"--" * 24}\nYou bought {searched_movie["title"]} for {searched_movie["price"]}. Thank you.\n{"--" * 24}")
     elif choice.lower() == "No".lower():
         return True
     return True
-
 
 
 
