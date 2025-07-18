@@ -32,10 +32,11 @@ def admin_login():
     print(f"{"--" * 24}\nWelcome to the Admin Dashboard.\n{"--" * 24}")
     username = input("Enter your username: ").lower()
     password = input("Enter your password: ").lower()
-
+ # Check if the username and password match the admin login details
     if username == admin_login_details["username"] and password == admin_login_details["password"]:
         print(f"{"--" * 24}\nLogin successful!\n{"--" * 24}")
         return True
+    # If the credentials are incorrect, prompt the user to try again
     else:
         print(f"{"--" * 24}\nInvalid credentials. Please try again.\n{"--" * 24}")
         return admin_login()
@@ -121,81 +122,85 @@ def book_a_movie():
             return True
             return True
     
+
+        # Function to view all bookings and also calculate total revenue
+def view_all_bookings():
+    if not booked_movies_and_refreshments:
+        print(f"{"--" * 24}\nNo bookings available.\n{"--" * 24}")
+    else:
+        print(f"{"--" * 24}\nBooked Movies and Refreshments:\n{"--" * 24}")
+        total_revenue = 0
+        for booking in booked_movies_and_refreshments:
+            name = booking["name"]
+            movie_title = booking["movie"]["title"]
+            movie_price = booking["movie"]["price"]
+            total = booking["total"]
+            total_revenue += total
+
+            if refreshments:
+                refresh_name = refreshments["Name"]
+                refresh_price = refreshments["Price"]
+            print(f"{name} booked {movie_title} for {movie_price} and also {refresh_name} at {refresh_price} and the Total is {total} .")
+        else:
+            print(f"{name} booked {movie_title} for {movie_price} and the Total is {total}.")
+
+            print(f"/nTotal bookings: {len(booked_movies_and_refreshments)} / {booking_slot}")
+            print(f"Total Revenue: {total_revenue}")
+
+#Function to view revenue summary and calculate total revenue
+def view_revenue_summary():
+    print(f"{"--" * 24}\nNo bookings available.\n{"--" * 24}")
+    movie_total = 0
+    refreshment_total = 0
+    for booking in booked_movies_and_refreshments:
+        movie_total += booking["movie"]["price"]
+        if "refreshment" in booking:
+            refreshment_total += booking["refreshment"]["Price"]
+    total_revenue = movie_total + refreshment_total
+    print(f"Total Revenue from Movies: {movie_total}")
+    print(f"Total Revenue from Refreshments: {refreshment_total}")
+    print(f"Overall Total Revenue: {total_revenue}")
+    print(f"Total Bookings: {len(booked_movies_and_refreshments)} / {booking_slot}")
+
+# Function to cancel an order by inputting the name of the booking
+def cancel_order():
+    if not booked_movies_and_refreshments:
+        print(f"{"--" * 24}\nNo bookings available to cancel.\n{"--" * 24}")
+        return
+    name_to_cancel = input("Enter the name of the booking to cancel: ").replace(" ", "").lower()
+    for booking in booked_movies_and_refreshments:
+        if booking["name"].lower() == name_to_cancel.lower():
+            booked_movies_and_refreshments.remove(booking)
+            print(f"Order for {booking["name"]} has been cancelled.")
+            return
+# If no matching booking is found, print a message
+        print(f"{"--" * 24}\nNo matching booking found for {name_to_cancel}.\n{"--" * 24}")
+
     # Admin Dashboard with menu to view bookings, revenue and cancel orders
 def admin_dashboard_menu():
-            while True:
-                print(f"{"--" * 24}\nAdmin Dashboard menu\n{"--" * 24}")
-                print("1. View all bookings.")
-                print("2. View revenue summary.")
-                print("3. cancel an order.")
-                print("4. Back to main menu.")
-                admin_option = input("Choose an option (1 | 2 | 3 | 4): ").strip()
-                if admin_option not in ["1", "2", "3", "4"]:
-                    print(f"{"--" * 24}\nInvalid option. Please try again.\n{"--" * 24}")
-                    return True
-
-                if admin_option == "1":
-                   view_all_bookings()
-                elif admin_option == "2":
-                    view_revenue_summary()
-                elif admin_option == "3":
-                    cancel_order()
-                elif admin_option == "4":
-                    return False
-                else:
-                    print(f"{"--" * 24}\ninvalid option. Please try again.\n{"--" * 24}")
-                    return True
-        
-def view_all_bookings():
-            if not booked_movies_and_refreshments:
-                print(f"{"--" * 24}\nNo bookings available.\n{"--" * 24}")
-            else:
-                print(f"{"--" * 24}\nBooked Movies and Refreshments:\n{"--" * 24}")
-                total_revenue = 0
-                for booking in booked_movies_and_refreshments:
-                    name = booking["name"]
-                    movie_title = booking["movie"]["title"]
-                    movie_price = booking["movie"]["price"]
-                    total = booking["total"]
-                    total_revenue += total
-
-                    if refreshments:
-                        refresh_name = refreshments["Name"]
-                        refresh_price = refreshments["Price"]
-                    print(f"{name} booked {movie_title} for {movie_price} and also {refresh_name} at {refresh_price} and the Total is {total} .")
-                else:
-                    print(f"{name} booked {movie_title} for {movie_price} and the Total is {total}.")
-
-                print(f"/nTotal bookings: {len(booked_movies_and_refreshments)} / {booking_slot}")
-                print(f"Total Revenue: {total_revenue}")
-
-def view_revenue_summary():
-            print(f"{"--" * 24}\nNo bookings available.\n{"--" * 24}")
-            movie_total = 0
-            refreshment_total = 0
-            for booking in booked_movies_and_refreshments:
-                movie_total += booking["movie"]["price"]
-                if "refreshment" in booking:
-                    refreshment_total += booking["refreshment"]["Price"]
-            total_revenue = movie_total + refreshment_total
-            print(f"Total Revenue from Movies: {movie_total}")
-            print(f"Total Revenue from Refreshments: {refreshment_total}")
-            print(f"Overall Total Revenue: {total_revenue}")
-            print(f"Total Bookings: {len(booked_movies_and_refreshments)} / {booking_slot}")
-
-def cancel_order():
-            if not booked_movies_and_refreshments:
-                print(f"{"--" * 24}\nNo bookings available to cancel.\n{"--" * 24}")
-                return
-            name_to_cancel = input("Enter the name of the booking to cancel: ").replace(" ", "").lower()
-            for booking in booked_movies_and_refreshments:
-                if booking["name"].lower() == name_to_cancel.lower():
-                    booked_movies_and_refreshments.remove(booking)
-                    print(f"Order for {booking["name"]} has been cancelled.")
-                    return
-                print(f"{"--" * 24}\nNo matching booking found for {name_to_cancel}.\n{"--" * 24}")
-                    
-
+    while True:
+        print(f"{"--" * 24}\nAdmin Dashboard menu\n{"--" * 24}")
+        print("1. View all bookings.")
+        print("2. View revenue summary.")
+        print("3. cancel an order.")
+        print("4. Back to main menu.")
+        admin_option = input("Choose an option (1 | 2 | 3 | 4): ").strip()
+        if admin_option not in ["1", "2", "3", "4"]:
+            print(f"{"--" * 24}\nInvalid option. Please try again.\n{"--" * 24}")
+            return True
+        if admin_option == "1":
+            view_all_bookings()
+        elif admin_option == "2":
+            view_revenue_summary()
+        elif admin_option == "3":
+            cancel_order()
+        elif admin_option == "4":
+            return False
+        else:
+            print(f"{"--" * 24}\ninvalid option. Please try again.\n{"--" * 24}")
+            return True
+                
+# Main function to run the program
 def main():
     print(f"{"--" * 24}\nWelcome to Genesis Cinema.\n{"--" * 24}")
 
