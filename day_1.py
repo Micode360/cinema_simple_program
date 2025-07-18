@@ -26,20 +26,22 @@ refreshments = [
 booked_movies_and_refreshments = []
 
 # reusable functions
-def list_movies_and_refreshments(movies = "None",refreshments = "None", movie_name="None",selected_refreshment = "None", type="all"):
+def list_movies_and_refreshments(movies_or_refreshments, movie_name="None",selected_refreshment = "None", type="all"):
     if type == "all":
-        for movie in movies:
-            return movie
-            # print(f"Title: {movie["title"]}, Price: ${movie["price"]}, Genre: {movie["genre"]}, Time:{movie["time"]}")
+        for movie in movies_or_refreshments:
+            if "title" in movie:
+                print(f"Title: {movie["title"]}, Price: ${movie["price"]}, Genre: {movie["genre"]}, Time:{movie["time"]}")
+            else:
+                print(f"Name: {movie["Name"]},Price: ${movie["Price"]},Recommendation: {movie["Recommendation"]},Category: {movie["Category"]},")
     elif type == "filter-movie":
-        for movie in movies:
+        for movie in movies_or_refreshments:
             if movie["title"].replace(" ", "").lower() == movie_name.replace(" ", "").lower():
                return movie
         else:
             return False
         
     elif type == "filter-refreshment":
-        for refreshment in refreshments:
+        for refreshment in movies_or_refreshments:
             if refreshment["Name"].replace(" ", "").lower() == selected_refreshment.replace(" ", "").lower():
                 return refreshment
         else:
@@ -57,7 +59,7 @@ def book_a_movie():
 
     # Searching a specific movie to book
     options = input(f"{"--" * 24}\nWrite the name of the movie you want to see: ")
-    searched_movie = list_movies_and_refreshments(movies, options, "filter")
+    searched_movie = list_movies_and_refreshments(movies, movie_name=options,type= "filter-movie")
 
     if searched_movie == False:
         print(f"{"--" * 24}\nWrong choice of movie. Try again\n{"--" * 24}")
@@ -79,7 +81,7 @@ def book_a_movie():
         print(f"{"--" * 24}\nWhat refreshments do you want to have?\n{"--" * 24}")
         list_movies_and_refreshments(refreshments)
         refreshoptions = input(f"{"--" * 24}\nWhat refreshment do you want to order: ")
-        selected_refreshmemt = list_movies_and_refreshments(refreshments, refreshoptions, "filter")
+        selected_refreshmemt = list_movies_and_refreshments(refreshments, selected_refreshment=refreshoptions, type="filter-refreshment")
 
         if selected_refreshmemt == False:
             print(f"{"--" * 24}\nUnavailable.Please Try again\n{"--" * 24}")
@@ -89,7 +91,7 @@ def book_a_movie():
 
         if refreshmentchoice == "Yes":
             booked_movies_and_refreshments.append({"name": name,"extra": [selected_refreshmemt],"movie": searched_movie})
-            print(f"{"--" * 24}\nYou bought {searched_movie["title"]} for {searched_movie["price"]} and also {selected_refreshmemt['Name']} at {selected_refreshmemt["Price"]}. Thank you.\n{"--" * 24}")
+            print(f"{"--" * 24}\n {name} bought {searched_movie["title"]} for {searched_movie["price"]} and also {selected_refreshmemt['Name']} at {selected_refreshmemt["Price"]}. Thank you.\n{"--" * 24}")
                     
         else:
             booked_movies_and_refreshments.append({"name": name,"movie": searched_movie})
