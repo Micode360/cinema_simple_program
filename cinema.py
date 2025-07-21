@@ -176,6 +176,32 @@ def view_revenue_summary():
             refreshment_total += booking["extra"][0]["Price"]
     total_revenue = movie_total + refreshment_total
 
+    # Display the total amount for each customer's movie and refreshment booking 
+
+    def total_amount():
+    print("--" * 24 + "\nCalculating Total Amount for All Bookings...\n" + "--" * 24)
+
+    if not booked_movies_and_refreshments:
+        print("No Bookings yet.")
+        return
+
+    for booking in booked_movies_and_refreshments:
+        name = booking['name']
+        movie_title = booking['movie']['title']
+        movie_price = booking['movie']['price']
+        refreshment_price = 0
+
+        print(f"\n{name}'s Booking:")
+        print(f"- Movie: {movie_title} = #{movie_price}")
+
+        if 'extra' in booking:
+            for item in booking['extra']:
+                refreshment_price += item['Price']
+                print(f"- Refreshment: {item['Name']} = #{item['Price']}")
+
+        total = calculate_total(movie_price, refreshment_price)
+        print(f"=> Total for {name}: #{total}")
+
     # Printing revenue summary from movies and refreshments
     print(f"{"--" * 24}\nRevenue Summary:\n{"--" * 24}")
     print(f"Total Revenue from Movies: {movie_total}")
@@ -208,11 +234,12 @@ def admin_dashboard_menu():
         print("2. View revenue summary.")
         print("3. cancel an order.")
         print("4. Back to main menu.")
+        print("5. view total amount per customer.")
 
-        admin_option = input("Choose an option (1 | 2 | 3 | 4): ").strip()
+        admin_option = input("Choose an option (1 | 2 | 3 | 4 | 5): ").strip()
 
 
-        if admin_option not in ["1", "2", "3", "4"]:
+        if admin_option not in ["1", "2", "3", "4","5"]:
             print(f"{"--" * 24}\nInvalid option. Please try again.\n{"--" * 24}")
             return True
         if admin_option == "1":
@@ -223,6 +250,8 @@ def admin_dashboard_menu():
             cancel_order()
         elif admin_option == "4":
             return False
+        elif admin_option == "5":
+            total_amount()
         else:
             print(f"{"--" * 24}\ninvalid option. Please try again.\n{"--" * 24}")
             return True
