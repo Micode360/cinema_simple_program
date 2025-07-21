@@ -122,7 +122,7 @@ def book_a_movie():
     else:
             print("Try Again")
             return True
-            return True
+    return True
     
 
         # Function to view all bookings and also calculate total revenue
@@ -149,7 +149,7 @@ def view_all_bookings():
             print(f"/nTotal bookings: {len(booked_movies_and_refreshments)} / {booking_slot}")
             print(f"Total Revenue: {total_revenue}")
 
-#Function to view revenue summary and calculate total revenue
+# Function to view revenue summary and calculate total revenue
 def view_revenue_summary():
     print(f"{"--" * 24}\nNo bookings available.\n{"--" * 24}")
     movie_total = 0
@@ -184,7 +184,7 @@ def admin_dashboard_menu():
         print(f"{"--" * 24}\nAdmin Dashboard menu\n{"--" * 24}")
         print("1. View all bookings.")
         print("2. View revenue summary.")
-        print("3. cancel an order.")
+        print("3. Cancel an order.")
         print("4. Back to main menu.")
         admin_option = input("Choose an option (1 | 2 | 3 | 4): ").strip()
         if admin_option not in ["1", "2", "3", "4"]:
