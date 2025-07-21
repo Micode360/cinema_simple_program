@@ -22,28 +22,17 @@ refreshments = [
     {"Name": "Doughnut", "Price": 2000, "Recommendation": 4.6, "Category": "Snacks"},
     {"Name": "Fried Buns", "Price": 1500, "Recommendation": 4.6, "Category": "Snacks"},
 ]
+
+booked_movies_and_refreshments = []
+booking_slot = 14
+
 # Admin login details
 admin_login_details = {
     "username": "admin",
     "password": "admin123"
 }
-# Function to handle admin login
-def admin_login():
-    print(f"{"--" * 24}\nWelcome to the Admin Dashboard.\n{"--" * 24}")
-    username = input("Enter your username: ").lower()
-    password = input("Enter your password: ").lower()
- # Check if the username and password match the admin login details
-    if username == admin_login_details["username"] and password == admin_login_details["password"]:
-        print(f"{"--" * 24}\nLogin successful!\n{"--" * 24}")
-        return True
-    # If the credentials are incorrect, prompt the user to try again
-    else:
-        print(f"{"--" * 24}\nInvalid credentials. Please try again.\n{"--" * 24}")
-        return admin_login()
-    
 
-booked_movies_and_refreshments = []
-booking_slot = 14
+
 
 # reusable functions
 def list_movies_and_refreshments(movies_or_refreshments, movie_name="None",selected_refreshment = "None", type="all"):
@@ -66,10 +55,25 @@ def list_movies_and_refreshments(movies_or_refreshments, movie_name="None",selec
                 return refreshment
         else:
             return False
+        
+
+# Function to handle admin login
+def admin_login():
+    print(f"{"--" * 24}\nWelcome to the Admin Dashboard.\n{"--" * 24}")
+    username = input("Enter your username: ").lower()
+    password = input("Enter your password: ").lower()
+ # Check if the username and password match the admin login details
+    if username == admin_login_details["username"] and password == admin_login_details["password"]:
+        print(f"{"--" * 24}\nLogin successful!\n{"--" * 24}")
+        return True
+    # If the credentials are incorrect, prompt the user to try again
+    else:
+        print(f"{"--" * 24}\nInvalid credentials. Please try again.\n{"--" * 24}")
+        return admin_login()
+    
 
     
 # refreshment function
-
 def book_a_movie():
     if len(booked_movies_and_refreshments) >= booking_slot:
         print(f"{"--" * 24}\nBooking slot is full. Please try again later.\n{"--" * 24}")
@@ -94,12 +98,12 @@ def book_a_movie():
     if choice.lower() == "Yes".lower():
         print(f"{"--" * 24}\nThe movie {searched_movie["title"]} cost {searched_movie["price"]} at {searched_movie["time"]}.\n{"--" * 24}")
         
-    refresh = input(f"{"--" * 24}\n Do you want to order refreshment: ")
+    refresh = input(f"{"--" * 24}\n Do you want to order refreshment? (Yes | No): ")
 
-    if refresh == "No":
+    if refresh == "No".lower():
         booked_movies_and_refreshments.append({"name": name,"movie": searched_movie})
         print(f"{"--" * 24}\nYou bought {searched_movie["title"]} for {searched_movie["price"]}. Thank you.\n{"--" * 24}")
-    elif refresh == "Yes":
+    elif refresh == "Yes".lower():
         # Collecting refreshment details
         print(f"{"--" * 24}\nWhat refreshments do you want to have?\n{"--" * 24}")
         list_movies_and_refreshments(refreshments)
@@ -110,22 +114,25 @@ def book_a_movie():
             print(f"{"--" * 24}\nUnavailable.Please Try again\n{"--" * 24}")
             return True
                 
-        refreshmentchoice = input(f"You are about to buy {selected_refreshmemt['Name']} at {selected_refreshmemt['Price']},would you like to add it to your cart: ")
-
-        if refreshmentchoice == "Yes":
-            booked_movies_and_refreshments.append({"name": name,"extra": [selected_refreshmemt],"movie": searched_movie})
-            print(f"{"--" * 24}\n {name} bought {searched_movie["title"]} for {searched_movie["price"]} and also {selected_refreshmemt['Name']} at {selected_refreshmemt["Price"]}. Thank you.\n{"--" * 24}")
-                    
+        refreshmentchoice = input(f"You are about to buy {selected_refreshmemt['Name']} at {selected_refreshmemt['Price']},would you like to add it to your order list? (Yes | No): ")
+    
+        # I added the total to calculate the total price of the movie and refreshment for easy calculation in view all bookings and revenue summary
+        if refreshmentchoice == "Yes".lower():
+            total = searched_movie['price'] + selected_refreshmemt['Price']
+            booked_movies_and_refreshments.append({"name": name,"extra": [selected_refreshmemt],"movie": searched_movie, "total": total})
+            print(f"{"--" * 24}\n {name} bought {searched_movie["title"]} for {searched_movie["price"]} and also {selected_refreshmemt['Name']} at {selected_refreshmemt["Price"]} and the total is {total}. Thank you.\n{"--" * 24}")
+            return      
         else:
-            booked_movies_and_refreshments.append({"name": name,"movie": searched_movie})
+            total = searched_movie['price']
+            booked_movies_and_refreshments.append({"name": name,"movie": searched_movie, "Total": total})
+            print(f"Booking complete! {name} bought {searched_movie['title']} for {total}")
             return True
     else:
             print("Try Again")
             return True
-    return True
     
 
-        # Function to view all bookings and also calculate total revenue
+# Function to view all bookings and also calculate total revenue
 def view_all_bookings():
     if not booked_movies_and_refreshments:
         print(f"{"--" * 24}\nNo bookings available.\n{"--" * 24}")
@@ -136,33 +143,47 @@ def view_all_bookings():
             name = booking["name"]
             movie_title = booking["movie"]["title"]
             movie_price = booking["movie"]["price"]
-            total = booking["total"]
+            refresh_info = ""
+
+            refresh_price = 0
+            if "extra" in booking:
+                refresh_name = booking["extra"][0]["Name"]
+                refresh_price = booking["extra"][0]["Price"]
+                refresh_info = f"and also {refresh_name} at {refresh_price}"
+
+            total = movie_price + refresh_price
+
+            # Calculate total revenue
             total_revenue += total
+            print(f"{name} booked {movie_title} for {movie_price} {refresh_info} and the Total is {total} .")
 
-            if refreshments:
-                refresh_name = refreshments["Name"]
-                refresh_price = refreshments["Price"]
-            print(f"{name} booked {movie_title} for {movie_price} and also {refresh_name} at {refresh_price} and the Total is {total} .")
-        else:
-            print(f"{name} booked {movie_title} for {movie_price} and the Total is {total}.")
+        print(f"\nTotal bookings: {len(booked_movies_and_refreshments)} / {booking_slot}")
+        print(f"Total Revenue: {total_revenue}")
 
-            print(f"/nTotal bookings: {len(booked_movies_and_refreshments)} / {booking_slot}")
-            print(f"Total Revenue: {total_revenue}")
 
-# Function to view revenue summary and calculate total revenue
+#Function to view revenue summary and calculate total revenue
 def view_revenue_summary():
-    print(f"{"--" * 24}\nNo bookings available.\n{"--" * 24}")
+    if not booked_movies_and_refreshments:
+        print(f"{"--" * 24}\nNo bookings available.\n{"--" * 24}")
+        return
     movie_total = 0
     refreshment_total = 0
+
+
     for booking in booked_movies_and_refreshments:
         movie_total += booking["movie"]["price"]
-        if "refreshment" in booking:
-            refreshment_total += booking["refreshment"]["Price"]
+        if "extra" in booking:
+            refreshment_total += booking["extra"][0]["Price"]
     total_revenue = movie_total + refreshment_total
+
+    # Printing revenue summary from movies and refreshments
+    print(f"{"--" * 24}\nRevenue Summary:\n{"--" * 24}")
     print(f"Total Revenue from Movies: {movie_total}")
     print(f"Total Revenue from Refreshments: {refreshment_total}")
     print(f"Overall Total Revenue: {total_revenue}")
     print(f"Total Bookings: {len(booked_movies_and_refreshments)} / {booking_slot}")
+    print(f"{"--" * 24}")
+
 
 # Function to cancel an order by inputting the name of the booking
 def cancel_order():
@@ -176,6 +197,7 @@ def cancel_order():
             print(f"Order for {booking["name"]} has been cancelled.")
             return
 # If no matching booking is found, print a message
+    else:
         print(f"{"--" * 24}\nNo matching booking found for {name_to_cancel}.\n{"--" * 24}")
 
     # Admin Dashboard with menu to view bookings, revenue and cancel orders
@@ -184,9 +206,12 @@ def admin_dashboard_menu():
         print(f"{"--" * 24}\nAdmin Dashboard menu\n{"--" * 24}")
         print("1. View all bookings.")
         print("2. View revenue summary.")
-        print("3. Cancel an order.")
+        print("3. cancel an order.")
         print("4. Back to main menu.")
+
         admin_option = input("Choose an option (1 | 2 | 3 | 4): ").strip()
+
+
         if admin_option not in ["1", "2", "3", "4"]:
             print(f"{"--" * 24}\nInvalid option. Please try again.\n{"--" * 24}")
             return True
@@ -207,8 +232,8 @@ def main():
     print(f"{"--" * 24}\nWelcome to Genesis Cinema.\n{"--" * 24}")
 
     while True:
+        print(booked_movies_and_refreshments, "b and r")
         options = input("1. Book a movie.\n2. View all movies.\n3. Admin Dashboard.\n4 Exit\nChoose any options (1 | 2 | 3 | 4 |): ")
-    
         if options == "1":
             book_a_movie()
         if options == "2":
@@ -222,8 +247,6 @@ def main():
             break
            
 
-                    
 
-
-
-main() # Running the program.
+if __name__ == "__main__":
+    main()
